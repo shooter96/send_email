@@ -4,10 +4,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
-from check_email import check_email_url
 
 
-def email_send(receivers, file=None, filename=None):
+def email_send(receivers, file=None):
     '''
     :param filename:
     :param receivers:
@@ -19,13 +18,15 @@ def email_send(receivers, file=None, filename=None):
     password = 'qFy7Tp6aX44trRgb'
     sender = from_addr
     file = file
+    filename = file.split('/')[-1]
 
     # 创建一个带附件的实例
     msg = MIMEMultipart()
     # 构建附件
     att = MIMEApplication(open(file, 'rb').read())
     att["Content-Type"] = 'application/octet-stream'
-    att["Content-Disposition"] = 'attachment; filename={}'.format(filename)
+
+    att.add_header('Content-Disposition', 'attachment', filename=('gbk', '', filename))
     msg.attach(att)
 
     # 设置邮件内容
@@ -55,12 +56,15 @@ def email_send(receivers, file=None, filename=None):
 
 
 if __name__ == '__main__':
-    email_receivers_str = input("请输入邮件接收人邮箱号，多个邮箱使用逗号隔开:")
-    email_receivers_list = email_receivers_str.split(',')
-    send_file = input("请输入测试报告地址：")
-    filename = ''
-    try:
-        filename = send_file.split('/')[-1]
-        email_send(email_receivers_list, file=send_file, filename=filename)
-    except Exception as e:
-        print("文件路径不正确:{}".format(e))
+    # email_receivers_str = input("请输入邮件接收人邮箱号，多个邮箱使用逗号隔开:")
+    # email_receivers_list = email_receivers_str.split(',')
+    # send_file = input("请输入测试报告地址：")
+    # filename = ''
+    # try:
+    #     filename = send_file.split('/')[-1]
+    #     email_send(email_receivers_list, file=send_file, filename=filename)
+    # except Exception as e:
+    #     print("文件路径不正确:{}".format(e))
+    email_send(['wangy@isyscore.com'], '/Users/shooter/Documents/网关列表.xlsx')
+    # email_send(['wangy@isyscore.com'], '/Users/shooter/Desktop/log.html')
+
